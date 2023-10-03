@@ -1,4 +1,4 @@
-# Olá! 👋 Eu sou o @Alexpel09
+# Olá! 👋 Eu sou o Alex Donozor
 
 Bem-vindo ao meu perfil no GitHub! Aqui está um pouco sobre mim:
 
