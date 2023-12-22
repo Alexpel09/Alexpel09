@@ -1,0 +1,79 @@
+import random
+from datetime import datetime
+
+class ContaBancaria:
+    def __init__(self, nome, cpf):
+        self.nome = nome
+        self.cpf = cpf
+        self.saldo = 0
+        self.saques_diarios = 3
+        self.limite_diario = 1500
+        self.transacoes = []
+
+    def deposito(self, valor):
+        self.saldo += valor
+        self.transacoes.append((datetime.now(), f'AlexCred - Depósito: +R${valor:.2f}'))
+        print('Depósito realizado com sucesso.')
+
+    def saque(self, valor):
+        if self.saques_diarios > 0 and valor <= 500 and (self.saldo - valor) >= 0 and (self.limite_diario - valor) >= 0:
+            self.saldo -= valor
+            self.saques_diarios -= 1
+            self.limite_diario -= valor
+            self.transacoes.append((datetime.now(), f'AlexCred - Saque: -R${valor:.2f}'))
+            print('Saque realizado com sucesso.')
+            print(f'Saques restantes hoje: {self.saques_diarios}')
+        else:
+            print('Saque não permitido. Verifique o limite diário ou o valor do saque.')
+
+    def extrato(self):
+        print(f"\nExtrato bancário para {self.nome} (CPF: {self.cpf}) na AlexCred:")
+        for data, transacao in self.transacoes:
+            print(f'{data.strftime("%Y-%m-%d %H:%M:%S")} - {transacao}')
+        print(f'Saldo atual: R${self.saldo:.2f}')
+
+def validar_cpf(cpf):
+    # Implementação simulada de validação de CPF
+    # Aqui você poderia usar uma biblioteca de validação de CPF ou uma API externa real
+    return len(cpf) == 11 and cpf.isdigit()
+
+def abrir_conta():
+    nome = input('Digite seu nome completo: ')
+    cpf = input('Digite seu CPF: ')
+
+    if validar_cpf(cpf):
+        conta = ContaBancaria(nome, cpf)
+        print('\nConta na AlexCred aberta com sucesso!')
+        return conta
+    else:
+        print('CPF inválido. Tente novamente.')
+        return abrir_conta()
+
+def main():
+    conta = abrir_conta()
+
+    while True:
+        print('\nEscolha uma opção:')
+        print('1. Depositar')
+        print('2. Sacar')
+        print('3. Extrato')
+        print('4. Sair')
+
+        opcao = int(input('Digite o número da opção desejada: '))
+
+        if opcao == 1:
+            valor = float(input('Digite o valor do depósito: '))
+            conta.deposito(valor)
+        elif opcao == 2:
+            valor = float(input('Digite o valor do saque: '))
+            conta.saque(valor)
+        elif opcao == 3:
+            conta.extrato()
+        elif opcao == 4:
+            print('Sessão encerrada. Obrigado por usar a AlexCred!')
+            break
+        else:
+            print('Opção inválida. Tente novamente.')
+
+if __name__ == "__main__":
+    main()
